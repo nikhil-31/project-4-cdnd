@@ -3,13 +3,16 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
-orbs:
-  docker: circleci/docker@2.2.0
-jobs:
-  build:
+executors:
+  docker:
+    docker:
+      - image: docker:stable
+  python:
     docker:
       - image: circleci/python:3.6.7-stretch
-
+jobs:
+  build:
+    executor: python
     working_directory: ~/repo
 
     steps:
@@ -29,7 +32,8 @@ jobs:
             . venv/bin/activate
             pip install -r requirements.txt
             # Install hadolint
-            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 
+            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 &&\
+                chmod +x /bin/hadolint
       - save_cache:
           paths:
             - ./venv
@@ -48,3 +52,12 @@ jobs:
             ls -lah
             . venv/bin/activate
             make lint
+  lint: 
+    executor: docker
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Run hadolint
+          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
