@@ -4,9 +4,6 @@
 #
 version: 2
 executors:
-  docker:
-    docker:
-      - image: docker:stable
   python:
     docker:
       - image: circleci/python:3.6.7-stretch
@@ -14,7 +11,6 @@ jobs:
   build:
     executor: python
     working_directory: ~/repo
-
     steps:
       - checkout
       # Download and cache dependencies
@@ -51,34 +47,3 @@ jobs:
             ls -lah
             . venv/bin/activate
             # make lint
-  
-  lint: 
-    executor: docker
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - setup_remote_docker
-            # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-            # Install hadolint
-            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.17.5/hadolint-Linux-x86_64 &&\
-                chmod +x /bin/hadolint
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
-      - run:
-          name: Run hadolint
-          command: docker run --rm --interactive hadolint/hadolint < Dockerfile
