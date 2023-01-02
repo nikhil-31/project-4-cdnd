@@ -1,4 +1,4 @@
-<include a CircleCI status badge, here>
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/nikhil-31/project-4-cdnd/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/nikhil-31/project-4-cdnd/tree/master)
 
 ## Project Overview
 
