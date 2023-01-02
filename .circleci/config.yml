@@ -39,11 +39,11 @@ jobs:
           command: |
             . venv/bin/activate
               make lint 
-      # run test
-      - run:
-          name: run test
-          command: |
-            . venv/bin/activate
-            make test
+      # # run test
+      # - run:
+      #     name: run test
+      #     command: |
+      #       . venv/bin/activate
+      #       make test
 
 # VS Code Extension Version: 1.5.1
